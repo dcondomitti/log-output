@@ -1,0 +1,42 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: log-output
+  namespace: logging
+  labels:
+    component: log-output
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+     component: log-output
+  template:
+    metadata:
+      labels:
+        component: log-output
+    spec:
+      containers:
+      - name: log-output
+        image: quay.io/daan/log-output:latest
+        imagePullPolicy: always
+        ports:
+        - containerPort: 4567
+          name: log-output
+          protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: log-output
+  namespace: logging
+  labels:
+    component: log-output
+spec:
+  selector:
+    component: log-output
+  ports:
+  - name: http
+    port: 80
+    targetPort: 4567
+    protocol: TCP
+  type: LoadBalancer

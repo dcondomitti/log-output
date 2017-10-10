@@ -6,6 +6,8 @@ require 'pry'
 $stdout.sync = true
 
 class LogApp < Sinatra::Base
+  set :bind, '0.0.0.0'
+
   get '/*' do
     log("request for #{request.path_info}")
 
